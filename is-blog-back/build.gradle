@@ -9,6 +9,10 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
+	// log4j2를 사용하기 위해 스프링부트에서 기본 제공하는 logging 모듈을 막는 처리
+	all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -28,7 +32,17 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// https://mvnrepository.com/artifact/org.postgresql/postgresql
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.8'
-	
+	// Spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-test'
+	/**jwt */
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+	// GSON
+	implementation 'com.google.code.gson:gson:2.9.0'
+	// log4j2
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 }
 
 tasks.named('test') {
