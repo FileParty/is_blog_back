@@ -1,7 +1,5 @@
 package com.web.blog.common.component;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

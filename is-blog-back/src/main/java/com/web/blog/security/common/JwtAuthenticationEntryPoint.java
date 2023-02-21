@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import com.web.blog.common.component.GsonUtils;
 import com.web.blog.common.exception.CommonErrorCode;
 import com.web.blog.common.exception.ErrorCode;
-import com.web.blog.security.vo.ResVO;
+import com.web.blog.security.response.ResVO;
 
 import lombok.extern.slf4j.Slf4j;
 

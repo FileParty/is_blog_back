@@ -1,4 +1,4 @@
-package com.web.blog.security.vo;
+package com.web.blog.security.response;
 
 import java.util.ArrayList;
 

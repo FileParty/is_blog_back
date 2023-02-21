@@ -35,8 +35,8 @@ public class TokenProvider implements InitializingBean {
     private final long tokenValidityInMilliseconds;
     private Key key;
     
-    public TokenProvider(@Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds){
+    public TokenProvider(@Value("${spring.jwt.secret}") String secret,
+            @Value("${spring.jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds){
 		this.secret = secret;
 		this.tokenValidityInMilliseconds = tokenValidityInMilliseconds;
 	}
@@ -58,7 +58,7 @@ public class TokenProvider implements InitializingBean {
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .setExpiration(validity)
                 .compact();
     }
@@ -74,7 +74,7 @@ public class TokenProvider implements InitializingBean {
             Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        User principal =new User(claims.getSubject(), "", authorities);
+        User principal = new User(claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 

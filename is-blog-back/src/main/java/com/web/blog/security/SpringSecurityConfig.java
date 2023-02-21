@@ -11,11 +11,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.web.blog.security.common.JwtAccessDeniedHandler;
+import com.web.blog.security.common.JwtAuthenticationEntryPoint;
+import com.web.blog.security.common.JwtSecurityConfig;
+import com.web.blog.security.common.TokenProvider;
+
 import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity  //Spring Security 설정 활성화
 @RequiredArgsConstructor
 public class SpringSecurityConfig {
+	
+	private final TokenProvider tokenProvider;
+    private final JwtAuthenticationEntryPoint jwtAtuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 	
 	@Bean
     public PasswordEncoder passwordEncoder() {
@@ -38,13 +47,22 @@ public class SpringSecurityConfig {
 		return httpSecurity.httpBasic().disable()
 				.csrf().disable()
 				.cors().and()
-				.headers().frameOptions().disable().and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and() // 로그인 후 토큰 미발급시에도 접근 허용 막기
-				.authorizeRequests()
-				.antMatchers("/vi/member/login").permitAll() // permitAll : 무조건 접근을 허용
-				.antMatchers("/vi/**").authenticated() // authenticated : 인증된 사용자의 접근을 허용
-				.anyRequest().authenticated().and() // 파라미터
-				.build();
+				/**401, 403 Exception 핸들링 */
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAtuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+                /**세션 사용하지 않음*/
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                /** HttpServletRequest를 사용하는 요청들에 대한 접근 제한 설정*/
+                .and()
+                .authorizeRequests()
+                .antMatchers("/authenticate","/isblog/back/test").permitAll()
+                /**JwtSecurityConfig 적용 */
+                .and()
+                .apply(new JwtSecurityConfig(tokenProvider))
+                .and().build();
 	}
 	
 	

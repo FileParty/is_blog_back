@@ -1,6 +1,7 @@
 package com.web.blog.common.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +17,10 @@ public class CommonController {
 	public String selectTestMsg() {
 		
 		String test = "Hello, Spring Boot!";
+		
+		String pwd = new BCryptPasswordEncoder().encode("test1234!@");
+		
+		System.out.println("pwd : " + pwd);
 		
 		System.out.println("ctypt origin val : " + test);
 		
